@@ -22,107 +22,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-
+} from "@/components/ui/card";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import NavMenu from "@/components/shared/NavMenu";
 
 export default function HomePage() {
   return (
     <div className="mx-auto p-6 space-y-12">
       {/* Navbar */}
-      <NavigationMenu className="flex justify-between items-center border-b border-gray-200 pb-4">
-        {/* Logo and Title */}
-        <div className="flex items-center space-x-3">
-          <HomeIcon className="w-8 h-8 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-800">
-            AI-Mazing Learning
-          </h1>
-        </div>
-
-        {/* Navigation Menu */}
-        <NavigationMenuList className="flex space-x-6">
-          {/* Home Link */}
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-gray-600 hover:text-blue-600">
-              Home
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <Link href="/" passHref>
-                <NavigationMenuLink className="block px-4 py-2 text-gray-700 hover:text-blue-600">
-                  Go to Home
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-
-          {/* Features Dropdown */}
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-gray-600 hover:text-blue-600">
-              Features
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="grid gap-2">
-                <Link href="/features/adaptive-learning" passHref>
-                  <NavigationMenuLink className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-blue-600">
-                    <AcademicCapIcon className="w-5 h-5" />
-                    <span>Adaptive Learning Paths</span>
-                  </NavigationMenuLink>
-                </Link>
-                <Link href="/features/predictive-analytics" passHref>
-                  <NavigationMenuLink className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-blue-600">
-                    <PresentationChartLineIcon className="w-5 h-5" />
-                    <span>Predictive Analytics</span>
-                  </NavigationMenuLink>
-                </Link>
-                <Link href="/features/chatbot" passHref>
-                  <NavigationMenuLink className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-blue-600">
-                    <ChatBubbleLeftEllipsisIcon className="w-5 h-5" />
-                    <span>Chatbots & Virtual Tutors</span>
-                  </NavigationMenuLink>
-                </Link>
-              </div>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-
-          {/* About Us Link */}
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-gray-600 hover:text-blue-600">
-              About Us
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <Link href="/about" passHref>
-                <NavigationMenuLink className="block px-4 py-2 text-gray-700 hover:text-blue-600">
-                  Learn more about us
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-
-          {/* Contact Link */}
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-gray-600 hover:text-blue-600">
-              Contact
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <Link href="/contact" passHref>
-                <NavigationMenuLink className="block px-4 py-2 text-gray-700 hover:text-blue-600">
-                  Get in touch
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-
-          {/* Sign In Button */}
-          <NavigationMenuItem>
-            <Button className="bg-blue-600 text-white hover:bg-blue-700">
-              Login
-            </Button>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+      <NavMenu/>
 
       {/* Hero Section */}
       <section className="text-center mt-8">
@@ -162,13 +72,12 @@ export default function HomePage() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button
-                variant="link"
+              <Link
                 href="/features/adaptive-learning"
                 className="text-blue-600"
               >
                 Learn More
-              </Button>
+              </Link>
             </CardFooter>
           </Card>
 
@@ -190,13 +99,12 @@ export default function HomePage() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button
-                variant="link"
+              <Link
                 href="/features/predictive-analytics"
                 className="text-green-600"
               >
                 Learn More
-              </Button>
+              </Link>
             </CardFooter>
           </Card>
 
@@ -218,13 +126,9 @@ export default function HomePage() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button
-                variant="link"
-                href="/features/chatbot"
-                className="text-purple-600"
-              >
+              <Link href="/features/chatbot" className="text-purple-600">
                 Learn More
-              </Button>
+              </Link>
             </CardFooter>
           </Card>
         </div>

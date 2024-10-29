@@ -1,5 +1,6 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+
+import { useState, ChangeEvent, useContext } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,11 +15,13 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { loginAction } from "@/lib/actions/auth.acton";
 import { useToast } from "@/hooks/use-toast";
+import { useUserContext } from "@/context/UserContext";
 
 export function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { toast } = useToast();
   const router = useRouter();
+  const { user, setUser } = useUserContext();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,15 +30,18 @@ export function LoginForm() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
     const response = await loginAction(formData);
-    if (response.success) {
+    if(response.success){
       toast({ title: "Welcome", description: "Logged in successfully!" });
+      setUser(response.user);
+      console.log(user);
       router.push("/dashboard");
-    } else {
-      toast({ title: "Error", description: response.error, variant: "destructive" });
+    }else{
+      toast({ title: "Error", description: "Invalid credentials, please try again.", variant: "destructive" });
     }
   };
+
+  
 
   return (
     <Card className="mx-auto max-w-sm">

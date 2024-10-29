@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { UserProvider } from "@/context/UserContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,13 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className="antialiased"
-      >
-        <main>{children}</main>
-        <Toaster />
-      </body>
-    </html>
+    <UserProvider>
+      <html lang="en">
+        <body className="antialiased">
+          <main>{children}</main>
+          <Toaster />
+        </body>
+      </html>
+    </UserProvider>
   );
 }
