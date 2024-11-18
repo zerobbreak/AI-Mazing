@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signupAction } from "@/lib/actions/auth.acton";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { signupAction } from "@/lib/actions/action";
 
 export function SignUpForm() {
   const { toast } = useToast();
@@ -34,11 +34,20 @@ export function SignUpForm() {
     event.preventDefault();
 
     const response = await signupAction(formData);
-    if (response.success) {
-      toast({ title: "Success", description: "Account created successfully!" });
-      router.push("/auth/login");
-    } else {
-      toast({ title: "Error", description: response.error, variant: "destructive" });
+
+    if(response.success){
+      toast({
+        title: "Success", 
+        description: "Account created successfully! Please log in"
+      });
+
+      router.push("/auth/sign-in");
+    }else{
+      toast({
+        title: "Error",
+        description: response.error || "An error occured during signup", 
+        variant: "destructive"
+      })
     }
   };
 

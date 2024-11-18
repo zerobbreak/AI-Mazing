@@ -13,44 +13,36 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { loginAction } from "@/lib/actions/auth.acton";
 import { useToast } from "@/hooks/use-toast";
-import { useUserContext } from "@/context/UserContext";
+import { useActionState } from "react";
+import { authenticate } from "@/lib/actions/action";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 export function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const { toast } = useToast();
-  const router = useRouter();
-  const { user, setUser } = useUserContext();
+  // const { toast } = useToast();
+  // const router = useRouter();
+
+  const [errorMessage, formAction, isPending] = useActionState(
+    authenticate,
+    undefined
+  );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const response = await loginAction(formData);
-    if(response.success){
-      toast({ title: "Welcome", description: "Logged in successfully!" });
-      setUser(response.user);
-      console.log(user);
-      router.push("/dashboard");
-    }else{
-      toast({ title: "Error", description: "Invalid credentials, please try again.", variant: "destructive" });
-    }
-  };
-
-  
-
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>Enter your email below to log in to your account.</CardDescription>
+        <CardDescription>
+          Enter your email below to log in to your account.
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="grid gap-4">
+        <form action={formAction} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -74,12 +66,25 @@ export function LoginForm() {
               required
             />
           </div>
-          <Button type="submit" className="w-full">Login</Button>
-          <Button variant="outline" className="w-full">Login with Google</Button>
+          <Button type="submit" className="w-full" aria-disabled={isPending}>
+            Login
+          </Button>
+          <Button variant="outline" className="w-full">
+            Login with Google
+          </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account? <Link href="/auth/sign-up" className="underline">Sign up</Link>
+          Don&apos;t have an account?{" "}
+          <Link href="/auth/sign-up" className="underline">
+            Sign up
+          </Link>
         </div>
+        {errorMessage && (
+          <>
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+            <p className="text-sm text-red-500">{errorMessage}</p>
+          </>
+        )}
       </CardContent>
     </Card>
   );

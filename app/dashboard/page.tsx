@@ -39,13 +39,13 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
 
   const dummyUserData = {
-    name: "Alex Johnson",
-    learningPath: "Data Science",
+    name: "John Doe",
+    learningPath: "Maths",
     progress: 68, // Progress percentage
     recommendations: [
-      "Machine Learning Basics",
-      "Python for Data Science",
-      "Data Visualization Techniques",
+      "Algebra ",
+      "Statistics",
+      "Geometry",
     ],
     completedLessons: 15,
     hoursSpent: 32,
@@ -96,7 +96,7 @@ export default function Dashboard() {
             <CardHeader className="flex items-center space-x-4">
               <AcademicCapIcon className="w-6 h-6 text-blue-500" />
               <div>
-                <CardTitle>Learning Paths</CardTitle>
+                <CardTitle>Core Subject</CardTitle>
                 <CardDescription>
                   Your current journey and next steps
                 </CardDescription>
@@ -158,7 +158,7 @@ export default function Dashboard() {
               <div>
                 <CardTitle>Recommendations</CardTitle>
                 <CardDescription>
-                  Based on your learning preferences
+                  Based on the weaknesses of the students
                 </CardDescription>
               </div>
             </CardHeader>

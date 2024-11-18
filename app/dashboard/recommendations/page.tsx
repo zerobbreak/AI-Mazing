@@ -93,10 +93,10 @@ export default function Recommendations() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center space-x-2">
+                <div className="flex justify-center items-center space-x-2">
                   <Link href={rec.path} passHref>
                     <Button variant="link" className="text-blue-600 hover:text-blue-700">
-                      View Details <ChevronRightIcon className="w-4 h-4 inline-block ml-1" />
+                      View Details
                     </Button>
                   </Link>
                   <Button variant="outline" className="text-gray-700 hover:bg-gray-200">
