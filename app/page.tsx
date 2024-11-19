@@ -27,6 +27,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import NavMenu from "@/components/shared/NavMenu";
+import TestImage from "@/components/shared/TestImage";
 
 export default function HomePage() {
   return (
@@ -146,6 +147,8 @@ export default function HomePage() {
           Sign Up Now
         </Button>
       </section>
+
+      <TestImage />
     </div>
   );
 }
