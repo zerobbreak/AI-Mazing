@@ -10,6 +10,7 @@ CREATE TABLE "User" (
     "completedLessons" INTEGER,
     "hoursSpent" INTEGER,
     "performanceTrend" TEXT,
+    "isOnboarding" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
