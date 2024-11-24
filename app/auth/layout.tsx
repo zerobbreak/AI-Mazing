@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { NextAuthProvider } from "@/providers/NextAuthProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <main>{children}</main>
+        <NextAuthProvider>{children}</NextAuthProvider>
         <Toaster />
       </body>
     </html>

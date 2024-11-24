@@ -20,6 +20,7 @@ model User {
   completedLessons Int?
   hoursSpent       Int?
   performanceTrend String?
+  isOnboarding     Boolean   @default(true) // New field to track onboarding status
   feedback         Feedback[] // Link to Feedback model
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt

@@ -1,61 +1,88 @@
-// File: pages/signup.tsx
-
-import { Input } from "@/components/ui/input"; // ShadCN Input component
-import { Button } from "@/components/ui/button"; // ShadCN Button component
-import { EyeIcon } from "@heroicons/react/24/solid"; // Heroicons
+"use client"
+import {z} from "zod";
 import Image from "next/image"; // To include the unDraw illustration
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { signUpSchema } from "@/utils/validation/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function page() {
+  const router = useRouter();
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof signUpSchema>) {
+    console.log(values);
+  }
   return (
     <div className="h-screen flex">
       {/* Left Section - Sign Up Form */}
       <div className="w-1/2 bg-gray-900 text-white flex flex-col justify-center px-16">
         <h1 className="text-3xl font-bold mb-2">Sign Up</h1>
         <p className="text-gray-400 mb-8">Create your account to get started</p>
-        <form>
-          {/* Username Input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Username</label>
-            <Input type="text" placeholder="Enter your username" className="w-full" />
-          </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Email Input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <Input type="email" placeholder="Enter your email" className="w-full" />
-          </div>
-
-          {/* Password Input */}
-          <div className="mb-4 relative">
-            <label className="block text-sm font-medium mb-1">Password</label>
-            <div className="relative">
-              <Input
-                type="password"
-                placeholder="Create a password"
-                className="w-full pr-10"
-              />
-              <EyeIcon className="absolute right-2 top-2 w-6 h-6 text-gray-400 cursor-pointer" />
-            </div>
-          </div>
-
-          {/* Confirm Password Input */}
-          <div className="mb-4 relative">
-            <label className="block text-sm font-medium mb-1">Confirm Password</label>
-            <div className="relative">
-              <Input
-                type="password"
-                placeholder="Confirm your password"
-                className="w-full pr-10"
-              />
-              <EyeIcon className="absolute right-2 top-2 w-6 h-6 text-gray-400 cursor-pointer" />
-            </div>
-          </div>
-
-          {/* Sign Up Button */}
-          <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white">
-            Sign Up
-          </Button>
-        </form>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Password" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Password must be minium 8 characters
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Password" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Password must be minium 8 characters
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
 
         {/* Already have an account */}
         <div className="mt-4 text-center">

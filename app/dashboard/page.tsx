@@ -20,8 +20,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
-import { fetchUserByEmail, fetchUserById } from "@/lib/actions/user.action";
-import { useUserContext } from "@/context/UserContext";
 
 // User data type declaration
 interface UserDataProps {

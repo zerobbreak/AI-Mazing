@@ -1,7 +1,6 @@
 //layout.tsx
 import AdminPanelLayout from "@/components/admin-panel/admin-panel-layout";
-import { UserProvider } from "@/context/UserContext";
-
+import { NextAuthProvider } from "@/providers/NextAuthProvider";
 export default async function Layout({
   children,
 }: Readonly<{
@@ -9,9 +8,7 @@ export default async function Layout({
 }>) {
   return (
     <AdminPanelLayout>
-      <UserProvider>
-        {children}
-      </UserProvider>
+      <NextAuthProvider>{children}</NextAuthProvider>
     </AdminPanelLayout>
   );
 }

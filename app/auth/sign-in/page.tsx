@@ -1,73 +1,155 @@
-// File: pages/login.tsx
+"use client";
+import { z } from "zod";
 
-import { Input } from "@/components/ui/input"; // ShadCN Input component
-import { Button } from "@/components/ui/button"; // ShadCN Button component
-import { LockClosedIcon, EyeIcon } from "@heroicons/react/24/solid"; // Heroicons
-import Image from "next/image"; // To include the unDraw illustration
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { signInSchema } from "@/utils/validation/validation";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { signIn } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 
 export default function Page() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isImageVisible, setIsImageVisible] = useState(false);
+  const router = useRouter();
+
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  async function onSubmit(values: z.infer<typeof signInSchema>) {
+    setIsSubmitting(true);
+    try {
+      const res = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      console.log(res);
+
+      if (res?.error) {
+        toast({
+          title: "Error",
+          description: res.error,
+          variant: "destructive",
+        });
+      } else {
+        const session = await fetch("/api/auth/session").then((res) =>
+          res.json()
+        );
+
+        console.log(session);
+        if (session?.user?.onboarded) {
+          router.push("/dashboard");
+        } else {
+          router.push("/onboarding");
+        }
+
+        toast({ 
+          title: "Success", 
+          description: "Login successful!" 
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  useEffect(() => {
+    // Trigger animation after component mounts
+    setTimeout(() => setIsImageVisible(true), 200);
+  }, []);
+
   return (
     <div className="h-screen flex">
-      {/* Left Section - Login Form */}
       <div className="w-1/2 bg-gray-900 text-white flex flex-col justify-center px-16">
         <h1 className="text-3xl font-bold mb-2">Login</h1>
         <p className="text-gray-400 mb-8">Enter your account details</p>
-        <form>
-          {/* Username Input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Username</label>
-            <Input type="text" placeholder="Enter your username" className="w-full" />
-          </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Password Input */}
-          <div className="mb-4 relative">
-            <label className="block text-sm font-medium mb-1">Password</label>
-            <div className="relative">
-              <Input
-                type="password"
-                placeholder="Enter your password"
-                className="w-full pr-10"
-              />
-              <EyeIcon className="absolute right-2 top-2 w-6 h-6 text-gray-400 cursor-pointer" />
-            </div>
-          </div>
-
-          {/* Forgot Password */}
-          <div className="mb-6">
-            <a href="#" className="text-sm text-purple-500 hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
-          {/* Login Button */}
-          <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white">
-            Login
-          </Button>
-        </form>
-
-        {/* Sign Up Link */}
-        <div className="mt-4 text-center">
-          <p className="text-gray-400 text-sm">
-            Don't have an account?{" "}
-            <a href="#" className="text-purple-500 hover:underline">
-              Sign up
-            </a>
-          </p>
-        </div>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Login"}
+            </Button>
+          </form>
+        </Form>
       </div>
 
       {/* Right Section - Illustration */}
       <div className="w-1/2 bg-purple-500 flex items-center justify-center">
-        <div className="text-center px-8">
-          <h2 className="text-4xl font-bold text-white mb-4">WELCOME TO AI Mazing</h2>
+        <motion.div
+          className="text-center px-8"
+          initial={{ translateY: 16, opacity: 0 }}
+          animate={{
+            translateY: isImageVisible ? 0 : 16,
+            opacity: isImageVisible ? 1 : 0,
+          }}
+          transition={{ duration: 0.7 }}
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">
+            WELCOME TO AI Mazing
+          </h2>
           <p className="text-white mb-6">Login to access your account</p>
           <Image
-            src="/login.svg" // Replace with the downloaded unDraw SVG
-            alt="Illustration"
+            src="/login.svg" // Update with the correct path
+            alt="Login Illustration"
             width={400}
             height={400}
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

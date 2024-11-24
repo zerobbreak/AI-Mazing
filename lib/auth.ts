@@ -19,6 +19,7 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
+
     jwt: ({ token, user }) => {
       console.log("JWT Callback", { token, user });
       if (user) {
@@ -31,6 +32,8 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+
+    
   },
   providers: [
     CredentialsProvider({
@@ -69,6 +72,5 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/auth/sign-in", 
-    
   }
 };
