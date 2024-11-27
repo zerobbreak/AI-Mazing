@@ -86,3 +86,13 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes slideInfinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%); /* Slide all the way through */
+  }
+}
+

@@ -142,10 +142,10 @@ export default function NavMenu() {
           {/* Action Buttons */}
           <div className="flex items-center space-x-2">
             <Button variant="outline" asChild>
-              <Link href="/auth/login">Login</Link>
+              <Link href="/sign-in">Login</Link>
             </Button>
             <Button variant="default" asChild>
-              <Link href="/auth/signup">Sign Up</Link>
+              <Link href="/sign-up">Sign Up</Link>
             </Button>
           </div>
         </div>
