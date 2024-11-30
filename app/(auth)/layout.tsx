@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 
 export const metadata = {
-  title: "Threads",
+  title: "AI Mazing",
   description: "A Next.js 13 Meta Threads Aplication",
 };
 

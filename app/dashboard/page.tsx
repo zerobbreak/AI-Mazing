@@ -1,198 +1,141 @@
-"use client";
+"use server";
 
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import {
-  AcademicCapIcon,
-  PresentationChartLineIcon,
-  BookmarkIcon,
-  ChatBubbleLeftRightIcon,
-} from "@heroicons/react/24/outline";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import { fetchStudent } from "@/lib/actions/student.action";
+import { currentUser } from "@clerk/nextjs/server";
+import { ArrowRightIcon, CheckCircleIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // User data type declaration
 interface UserDataProps {
   name: string;
-  learningPath: string;
-  progress: number;
-  recommendations: string[];
-  completedLessons: number;
-  hoursSpent: number;
-  performanceTrend: string;
+  username: string;
+  gradeLevel: string;
+  preferences: {
+    language: string;
+    notificationsEnabled: boolean;
+    theme: string;
+  };
+  studyRecommendations: string[];
+  subjects: string[];
+  uploadedDocuments: string[];
+  performance: {
+    attendanceRate: number;
+    averageTaskCompletionTime: number;
+  };
+  onboarded: boolean;
 }
 
-export default function Dashboard() {
-  const [user, setUser] = useState<UserDataProps | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export default async function Dashboard() {
+  const userInfo = await currentUser();
+  const user = await fetchStudent(userInfo?.id);
 
-  const dummyUserData = {
-    name: "John Doe",
-    learningPath: "Maths",
-    progress: 68, // Progress percentage
-    recommendations: [
-      "Algebra ",
-      "Statistics",
-      "Geometry",
-    ],
-    completedLessons: 15,
-    hoursSpent: 32,
-    performanceTrend: "Improving",
-  };
-  
-  useEffect(() => {
-    // Simulate fetching user data and set the dummy data
-    setUser(dummyUserData);
-  }, []);
+  if (!user) return <div>Loading.......</div>;
 
-  if (error) return <div>Error: {error}</div>;
-  console.log(user);
-
+  // Check for missing fields
+  const missingData =
+    !user.name || !user.gradeLevel || user.subjects.length === 0;
   return (
     <ContentLayout title="Overview">
       <div className="container mx-auto p-6 space-y-10">
-        {/* Welcome Banner */}
-        <section className="bg-blue-50 p-8 rounded-lg text-center shadow-md">
-          <h2 className="text-3xl font-bold text-blue-600">
-            Welcome back, {user?.name}!
-          </h2>
-          <p className="text-gray-700 mt-2">
-            You’re currently {user?.progress}% through the{" "}
-            <strong>{user?.learningPath}</strong> path.
-          </p>
-          <Progress value={user?.progress} className="mt-4" />
-        </section>
-
-        {/* Message to Complete Setup */}
-        {(!user?.name || !user?.learningPath) && (
-          <div className="bg-yellow-100 p-4 rounded-lg text-center">
-            <p className="text-lg font-semibold text-yellow-800">
-              Finish up setup: Please complete your profile setup.
-            </p>
-            <Link href={`/dashboard/profile`} passHref>
-              <Button className="mt-2 bg-yellow-600 text-white hover:bg-yellow-700">
-                Complete Setup
-              </Button>
-            </Link>
-          </div>
-        )}
-
-        {/* Core Dashboard Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Learning Paths Section */}
-          <Card className="shadow-md rounded-lg hover:shadow-lg transition duration-200 ease-in-out">
-            <CardHeader className="flex items-center space-x-4">
-              <AcademicCapIcon className="w-6 h-6 text-blue-500" />
-              <div>
-                <CardTitle>Core Subject</CardTitle>
-                <CardDescription>
-                  Your current journey and next steps
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Continue with <strong>{user?.learningPath}</strong>.
-              </p>
-              <Link href="/dashboard/learning-path" passHref>
-                <Button className="mt-4 bg-blue-600 text-white hover:bg-blue-700">
-                  Continue Learning
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Performance Analytics Section */}
-          <Card className="shadow-md rounded-lg hover:shadow-lg transition duration-200 ease-in-out">
-            <CardHeader className="flex items-center space-x-4">
-              <PresentationChartLineIcon className="w-6 h-6 text-green-500" />
-              <div>
-                <CardTitle>Performance Analytics</CardTitle>
-                <CardDescription>
-                  Track your progress and trends
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p>
-                <strong>Completed Lessons:</strong> {user?.completedLessons}
-              </p>
-              <p>
-                <strong>Total Hours:</strong> {user?.hoursSpent} hrs
-              </p>
-              <p>
-                <strong>Trend:</strong>{" "}
-                <Badge
-                  variant="outline"
-                  color={
-                    user?.performanceTrend === "Improving" ? "green" : "yellow"
-                  }
-                >
-                  {user?.performanceTrend}
-                </Badge>
-              </p>
-              <Link href="/dashboard/analytics" passHref>
-                <Button className="mt-4 bg-green-600 text-white hover:bg-green-700">
-                  View Details
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Recommendations Section */}
-          <Card className="shadow-md rounded-lg hover:shadow-lg transition duration-200 ease-in-out">
-            <CardHeader className="flex items-center space-x-4">
-              <BookmarkIcon className="w-6 h-6 text-purple-500" />
-              <div>
-                <CardTitle>Recommendations</CardTitle>
-                <CardDescription>
-                  Based on the weaknesses of the students
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {user?.recommendations.map((rec, index) => (
-                <div key={index} className="py-1">
-                  <Link href={`/recommendations/${rec}`} passHref>
-                    <Button
-                      variant="link"
-                      className="text-blue-600 hover:text-blue-700"
-                    >
-                      {rec}
-                    </Button>
-                  </Link>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+      {/* Step-by-Step Guide */}
+      <section className="bg-gray-100 p-6 rounded-lg shadow-md space-y-4">
+        <div className="flex items-center space-x-3">
+          <CheckCircleIcon className="h-6 w-6 text-gray-800" />
+          <h3 className="text-2xl font-bold text-gray-800">Getting Started</h3>
         </div>
+        <ol className="list-decimal list-inside space-y-2 text-gray-700">
+          <li>Review your profile information.</li>
+          <li>Add missing details like subjects, preferences, and study recommendations.</li>
+          <li>Track your progress and explore personalized recommendations.</li>
+        </ol>
+      </section>
 
-        {/* Community and Feedback Section */}
-        <section className="bg-gray-100 p-6 rounded-lg text-center shadow-md">
-          <h3 className="text-2xl font-semibold text-gray-800">
-            Community & Feedback
-          </h3>
-          <p className="text-gray-600 mt-2">
-            Connect with peers and share your experiences, or provide feedback
-            on the platform.
-          </p>
-          <Link href="/dashboard/community" passHref>
-            <Button className="mt-4 bg-blue-600 text-white hover:bg-blue-700">
-              Join the Community
+      {/* Profile Incomplete Alert */}
+      {missingData && (
+        <Alert variant="destructive" className="rounded-lg shadow-md">
+            <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600" />
+          <div>
+            <AlertDescription>
+              <h3 className="text-lg font-semibold text-yellow-800">Your profile is incomplete.</h3>
+              <p className="text-yellow-700">
+                Complete your profile to get personalized recommendations and a better experience.
+              </p>
+            </AlertDescription>
+          </div>
+          <Link href="/dashboard/profile" passHref>
+            <Button variant="default" className="ml-auto mt-4">
+              Complete Profile
             </Button>
           </Link>
-        </section>
+        </Alert>
+      )}
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Learning Path */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center space-x-2">
+              <ArrowRightIcon className="h-5 w-5 text-blue-600" />
+              <CardTitle className="text-blue-600">Learning Path</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700">
+              Continue with {user.gradeLevel || "your grade level"} journey.
+            </p>
+            <Link href="/dashboard/learning-path" passHref>
+              <Button className="mt-4" variant="secondary">
+                Explore Learning Path
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
+        {/* Performance Analytics */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center space-x-2">
+              <ArrowRightIcon className="h-5 w-5 text-green-600" />
+              <CardTitle className="text-green-600">Performance Analytics</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700">
+              Attendance Rate: {user.performance.attendanceRate}%
+            </p>
+            <p className="text-gray-700">
+              Task Completion Time: {user.performance.averageTaskCompletionTime} minutes
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Recommendations */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center space-x-2">
+              <ArrowRightIcon className="h-5 w-5 text-purple-600" />
+              <CardTitle className="text-purple-600">Recommendations</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {user.studyRecommendations.length > 0 ? (
+              <ul className="list-disc list-inside text-gray-700">
+                {user.studyRecommendations.map(({ rec, index }: any) => (
+                  <li key={index}>{rec}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-700">No recommendations available yet.</p>
+            )}
+          </CardContent>
+        </Card>
       </div>
+    </div>
     </ContentLayout>
   );
 }

@@ -78,6 +78,42 @@ body {
   }
 }
 
+.input-style {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  width: 100%;
+}
+
+.input-style:focus {
+  border-color: #5e9ed6;
+  outline: none;
+}
+
+.select-style {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+}
+
 @layer base {
   * {
     @apply border-border;

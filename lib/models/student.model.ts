@@ -58,6 +58,7 @@ const StudentSchema = new Schema<IStudent>({
     {
       type: Schema.Types.ObjectId,
       ref: "Subject",
+      required: true,
     },
   ],
   academicProgress: {
