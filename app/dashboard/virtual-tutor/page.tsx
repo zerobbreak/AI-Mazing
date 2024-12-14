@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PaperAirplaneIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
-import { fetchResponse } from "@/lib/actions/api.action";
 
 export default function RapidApiDisplay() {
   const [response, setResponse] = useState<string | null>(null);
@@ -24,16 +23,6 @@ export default function RapidApiDisplay() {
 
   async function handleFetchRecommendations() {
     setLoading(true);
-
-    try {
-      // You can update fetchChatGPTResponse to accept user-specific data if needed
-      const chatGPTResponse = await fetchResponse(dummyUser);
-      setResponse(chatGPTResponse);
-    } catch (error) {
-      setResponse("Error fetching recommendations");
-    } finally {
-      setLoading(false);
-    }
   }
 
   return (

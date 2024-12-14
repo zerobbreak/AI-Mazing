@@ -10,8 +10,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { fetchUserById, updateUser } from "@/lib/actions/user.action";
-import { useUserContext } from "@/context/UserContext";
 
 interface User {
   id: number;
@@ -38,31 +36,11 @@ const presetLearningPaths = [
 export default function UserUpdateForm() {
   const router = useRouter();
   const { toast } = useToast();
-  const { user } = useUserContext();
-  const id = user?.id; // Fetching the user ID from the URL
 
-  // State for user details
   const [name, setName] = useState<string>("");
   const [learningPath, setLearningPath] = useState<string>("");
   const [hoursSpent, setHoursSpent] = useState<number>(0);
   const [preferences, setPreferences] = useState<string>("");
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (id) {
-        const fetchedUser = await fetchUserById(id); // Fetch user by ID
-        if (fetchedUser) {
-          // Populate state with fetched user data
-          setName(fetchedUser.name);
-          setLearningPath(fetchedUser.learningPath);
-          setHoursSpent(fetchedUser.hoursSpent);
-          setPreferences(fetchedUser.preferences);
-        }
-      }
-    };
-
-    fetchUser(); // Call the function to fetch user data
-  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,12 +52,12 @@ export default function UserUpdateForm() {
     };
 
     try {
-      const updatedUser = await updateUser(id, formData); // Update user data
+      // const updatedUser = await updateUser(id, formData); // Update user data
       toast({
         title: "Success!",
         description: "User updated successfully.",
       });
-      console.log("User updated successfully:", updatedUser);
+      console.log("User updated successfully:");
       router.push("/dashboard"); // Redirect to dashboard
     } catch (error: any) {
       toast({

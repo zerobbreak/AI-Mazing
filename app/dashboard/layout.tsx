@@ -1,6 +1,11 @@
 //layout.tsx
 import AdminPanelLayout from "@/components/admin-panel/admin-panel-layout";
-import { UserProvider } from "@/context/UserContext";
+import { ClerkProvider } from "@clerk/nextjs";
+
+export const metadata = {
+  title: "AI Mazing",
+  description: "A Next.js 13 Meta Education Aplication",
+};
 
 export default async function Layout({
   children,
@@ -8,10 +13,8 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <AdminPanelLayout>
-      <UserProvider>
-        {children}
-      </UserProvider>
-    </AdminPanelLayout>
+    <ClerkProvider>
+      <AdminPanelLayout>{children}</AdminPanelLayout>
+    </ClerkProvider>
   );
 }
