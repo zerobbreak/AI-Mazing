@@ -1,24 +1,43 @@
-
-import { Resource, Subject } from "@/type"
-import { ResourceCard } from "./ResourceCard"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type { Resource, Subject } from "@/type"
+import { Badge } from "@/components/ui/badge"
 
 interface ResourceListProps {
   resources: Resource[]
   subject: Subject
   subtopic: string
+  getResourceTypeIcon: (type: string) => React.ReactNode
 }
 
-export function ResourceList({ resources, subject, subtopic }: ResourceListProps) {
+export function ResourceList({ resources, subject, subtopic, getResourceTypeIcon }: ResourceListProps) {
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-2">{subject}</h2>
-      <h3 className="text-xl font-semibold mb-4">{subtopic}</h3>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {resources.map((resource) => (
-          <ResourceCard key={resource.id} resource={resource} />
-        ))}
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{subject}</CardTitle>
+        <CardDescription>{subtopic}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {resources.map((resource) => (
+            <li key={resource.id}>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">{resource.title}</CardTitle>
+                  {getResourceTypeIcon(resource.type)}
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-muted-foreground">{resource.description}</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <Badge variant="secondary">{resource.difficulty}</Badge>
+                    {resource.duration && <Badge variant="outline">{resource.duration} min</Badge>}
+                  </div>
+                </CardContent>
+              </Card>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   )
 }
 

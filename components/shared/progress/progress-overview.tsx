@@ -1,18 +1,27 @@
 "use client"
 
 import { useMemo } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Bar } from "react-chartjs-2"
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js"
-import { Progress } from "@/type"
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  type ChartOptions,
+} from "chart.js"
+import type { Progress } from "@/type"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 interface ProgressOverviewProps {
   subjectsProgress: Progress[]
+  onSubjectSelect: (subject: string) => void
 }
 
-export function ProgressOverview({ subjectsProgress }: ProgressOverviewProps) {
+export function ProgressOverview({ subjectsProgress, onSubjectSelect }: ProgressOverviewProps) {
   const chartData = useMemo(
     () => ({
       labels: subjectsProgress.map((subject) => subject.subject),
@@ -36,8 +45,9 @@ export function ProgressOverview({ subjectsProgress }: ProgressOverviewProps) {
     [subjectsProgress],
   )
 
-  const options = {
+  const options: ChartOptions<"bar"> = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       y: {
         beginAtZero: true,
@@ -53,19 +63,18 @@ export function ProgressOverview({ subjectsProgress }: ProgressOverviewProps) {
         text: "Subject Progress",
       },
     },
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const index = elements[0].index
+        onSubjectSelect(subjectsProgress[index].subject)
+      }
+    },
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Progress Overview</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div style={{ height: "300px" }}>
-          <Bar data={chartData} options={options} />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="w-full h-[400px]">
+      <Bar data={chartData} options={options} />
+    </div>
   )
 }
 

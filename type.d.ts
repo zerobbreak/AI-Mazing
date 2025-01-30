@@ -1,6 +1,8 @@
 export type QuestionType = "multiple-choice" | "true-false" | "short-answer";
 export type EducationLevel = "High School" | "University";
 export type DifficultyLevel = "Beginner" | "Intermediate" | "Advanced";
+export type QuestionType = "multiple-choice" | "true-false" | "short-answer";
+export type QuizDifficulty = "Easy" | "Medium" | "Hard";
 
 export interface PerformanceMetrics {
   averageScore: number;
@@ -30,7 +32,6 @@ export interface SubjectProgress {
   subject: Subject;
   progress: number;
 }
-
 
 export interface Question {
   id: string;
@@ -77,142 +78,169 @@ export interface LearningPathProgress {
   totalLessons: number;
 }
 
-//Quiz
-export type QuestionType = "multiple-choice" | "true-false" | "short-answer"
-export type QuizDifficulty = "Easy" | "Medium" | "Hard"
+export interface LearningPath {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}
 
+//Quiz
 export interface Question {
-  id: string
-  type: QuestionType
-  question: string
-  options?: string[]
-  correctAnswer: string
-  explanation: string
-  difficulty: QuizDifficulty
-  hint?: string
+  id: string;
+  type: QuestionType;
+  question: string;
+  options?: string[];
+  correctAnswer: string;
+  explanation: string;
+  difficulty: QuizDifficulty;
+  hint?: string;
 }
 
 export interface Quiz {
-  id: string
-  subject: string
-  title: string
-  description: string
-  timeLimit: number // in seconds
-  questions: Question[]
+  id: string;
+  subject: string;
+  title: string;
+  description: string;
+  timeLimit: number; // in seconds
+  questions: Question[];
 }
 
 export interface QuizResult {
-  quizId: string
-  score: number
-  totalQuestions: number
-  completedAt: string
-  timeSpent: number
-  answers: Record<string, string>
-  difficulty: QuizDifficulty
+  quizId: string;
+  score: number;
+  totalQuestions: number;
+  completedAt: string;
+  timeSpent: number;
+  answers: Record<string, string>;
+  difficulty: QuizDifficulty;
 }
 
 export interface UserPerformance {
-  userId: string
+  userId: string;
   subjectPerformance: Record<
     string,
     {
-      totalQuizzes: number
-      averageScore: number
-      averageDifficulty: number // 0: Easy, 1: Medium, 2: Hard
+      totalQuizzes: number;
+      averageScore: number;
+      averageDifficulty: number; // 0: Easy, 1: Medium, 2: Hard
     }
-  >
+  >;
 }
 
 export interface QuizSummary {
-  id: string
-  title: string
-  subject: string
-  description: string
-  difficulty: QuizDifficulty
-  questionCount: number
-  timeLimit: number
+  id: string;
+  title: string;
+  subject: string;
+  description: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  questionCount: number;
+  timeLimit: number;
 }
 
 //Chat
-export type MessageRole = "user" | "assistant"
+export type MessageRole = "user" | "assistant";
 
 export interface Message {
-  role: MessageRole
-  content: string
+  role: MessageRole;
+  content: string;
 }
 
 export interface Topic {
-  id: string
-  name: string
-  description: string
+  id: string;
+  name: string;
+  description: string;
 }
 
 //Progress
 export interface Progress {
-  subject: string
-  accuracy: number
-  timeSpent: number // in minutes
-  masteryLevel: number // 0-100
+  subject: string;
+  accuracy: number;
+  timeSpent: number;
+  masteryLevel: number;
 }
 
 export interface ProgressData {
-  overallAccuracy: number
-  totalTimeSpent: number // in minutes
-  subjectsProgress: Progress[]
+  overallAccuracy: number;
+  totalTimeSpent: number;
+  subjectsProgress: Progress[];
 }
 
 export interface FocusArea {
-  subject: string
-  topic: string
-  recommendation: string
+  id: string;
+  subject: string;
+  topic: string;
+  recommendation: string;
+  currentMastery: number;
+  suggestedResources: string[];
+  practiceQuestions: string[];
 }
 
 //Materials
-export type ResourceType = "article" | "video" | "exercise"
 
-export type Subject = "Mathematics" | "Science" | "English" | "History" | "Foreign Language"
+export type Subject =
+  | "Mathematics"
+  | "Science"
+  | "English"
+  | "History"
+  | "Foreign Language";
 
 export interface Resource {
-  id: string
-  title: string
-  type: ResourceType
-  description: string
-  url: string
-  duration?: number // in minutes
-  difficulty: "beginner" | "intermediate" | "advanced"
-  subject: Subject
-  subtopic: string
+  id: string;
+  title: string;
+  type: "video" | "article" | "exercise";
+  description: string;
+  url: string;
+  duration?: number;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  subject: Subject;
+  subtopic: string;
 }
 
 export interface UserLearningPattern {
-  preferredResourceTypes: ResourceType[]
-  strongSubjects: Subject[]
-  weakSubjects: Subject[]
-  averageStudyTime: number // in minutes
+  preferredResourceTypes: string[];
+  strongSubjects: Subject[];
+  weakSubjects: Subject[];
+  averageStudyTime: number;
 }
 
 //Settings
 export interface UserProfile {
-  fullName: string
-  email: string
-  bio: string
+  fullName: string;
+  email: string;
+  bio: string;
 }
 
 export interface UserStatistics {
-  coursesCompleted: number
-  totalStudyTime: number // in hours
-  averageQuizScore: number // percentage
-  currentStreak: number // days
+  coursesCompleted: number;
+  totalStudyTime: number; // in hours
+  averageQuizScore: number; // percentage
+  currentStreak: number; // days
 }
 
 export interface LearningPreferences {
-  dailyStudyGoal: string
-  preferredDifficulty: string
-  darkMode: boolean
+  dailyStudyGoal: string;
+  preferredDifficulty: string;
+  darkMode: boolean;
 }
 
 export interface NotificationSettings {
-  emailNotifications: boolean
-  pushNotifications: boolean
-  dailyReminders: boolean
+  emailNotifications: boolean;
+  pushNotifications: boolean;
+  dailyReminders: boolean;
+}
+
+//Chat
+export interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: string;
+}
+
+export interface ChatResource {
+  id: string;
+  title: string;
+  type: "video" | "article" | "practice" | "summary";
+  url: string;
 }
