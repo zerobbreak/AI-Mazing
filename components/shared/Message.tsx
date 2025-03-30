@@ -1,6 +1,6 @@
 import { Brain } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import type { Message } from "@/type"
+import type { Message } from "@/types"
 
 interface ChatMessageProps {
   message: Message

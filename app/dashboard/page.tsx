@@ -1,40 +1,59 @@
-"use client"
+"use server";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { LineChart } from "@/components/shared/line-chart"
-import { lessons, performanceMetrics, quizScores, subjectProgress } from "@/constants"
-import { Award, BookOpen, TrendingUp } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { LineChart } from "@/components/shared/line-chart";
+import {
+  lessons,
+  performanceMetrics,
+  quizScores,
+  subjectProgress,
+} from "@/constants";
+import { Award, BookOpen, TrendingUp } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
+import { fetchUser } from "@/lib/actions/user.action";
+import { redirect } from "next/navigation";
+import { EducationStatus } from "@/lib/utils";
 
-const Page = () => {
+const Page = async () => {
+  const user = await currentUser();
+  if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+  if(!userInfo?.onboarded) redirect("/onboarding");
+  
   return (
     <div className="container mx-auto p-4 sm:p-6 space-y-6">
       {/* Header */}
       <div className="space-y-1">
-        <h1 className="text-xl sm:text-2xl font-bold">Welcome back, Student!</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">High School - Grade 11</p>
+        <h1 className="text-xl sm:text-2xl font-bold">
+          Welcome back, Student!
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">{EducationStatus(userInfo.grade)}</p>
       </div>
 
       <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
         {/* Overall Progress */}
         <Card className="sm:col-span-2 md:col-span-1">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">Overall Learning Progress</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">
+              Overall Learning Progress
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Total Progress</span>
-                <span>65%</span>
+                <span>0%</span>
               </div>
-              <Progress value={65} />
+              <Progress value={0} />
             </div>
             <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
               <div>
-                <span>12/20</span>
-                <p>Courses Completed</p>
+                <span>{userInfo.subjects.length}</span>
+                <p>Subjects Completed</p>
               </div>
               <div className="text-right">
                 <span>87</span>
@@ -47,7 +66,9 @@ const Page = () => {
         {/* Subject Progress */}
         <Card className="sm:col-span-2 md:col-span-1">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">Subject Progress</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">
+              Subject Progress
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {subjectProgress.map((subject) => (
@@ -65,14 +86,21 @@ const Page = () => {
         {/* Recommended Lessons */}
         <Card className="sm:col-span-2">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">Recommended Lessons</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">
+              Recommended Lessons
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {lessons.map((lesson) => (
-              <div key={lesson.title} className="flex flex-col space-y-4 p-3 sm:p-4 border rounded-lg">
+              <div
+                key={lesson.title}
+                className="flex flex-col space-y-4 p-3 sm:p-4 border rounded-lg"
+              >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-2 sm:space-y-0">
                   <div className="space-y-1">
-                    <p className="font-medium text-sm sm:text-base">{lesson.title}</p>
+                    <p className="font-medium text-sm sm:text-base">
+                      {lesson.title}
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       <Badge variant="secondary">{lesson.subject}</Badge>
                       <Badge variant="outline">{lesson.level}</Badge>
@@ -81,12 +109,18 @@ const Page = () => {
                   </div>
                   <Button className="self-start sm:self-center">Start</Button>
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground">{lesson.description}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {lesson.description}
+                </p>
                 <div className="space-y-1">
                   <p className="text-xs font-medium">Prerequisites:</p>
                   <div className="flex flex-wrap gap-1">
                     {lesson.prerequisites.map((prereq) => (
-                      <Badge key={prereq} variant="secondary" className="text-xs">
+                      <Badge
+                        key={prereq}
+                        variant="secondary"
+                        className="text-xs"
+                      >
                         {prereq}
                       </Badge>
                     ))}
@@ -100,7 +134,9 @@ const Page = () => {
         {/* Performance Metrics */}
         <Card className="sm:col-span-2">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">Performance Metrics</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">
+              Performance Metrics
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -109,8 +145,12 @@ const Page = () => {
                   <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Average Score</p>
-                  <p className="text-lg sm:text-2xl font-bold">{performanceMetrics.averageScore.toFixed(1)}%</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Average Score
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold">
+                    {performanceMetrics.averageScore.toFixed(1)}%
+                  </p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -118,8 +158,12 @@ const Page = () => {
                   <Award className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Current Streak</p>
-                  <p className="text-lg sm:text-2xl font-bold">{performanceMetrics.currentStreak} days</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Current Streak
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold">
+                    {performanceMetrics.currentStreak} days
+                  </p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -127,40 +171,56 @@ const Page = () => {
                   <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Total Quizzes Taken</p>
-                  <p className="text-lg sm:text-2xl font-bold">{performanceMetrics.totalQuizzesTaken}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Total Quizzes Taken
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold">
+                    {performanceMetrics.totalQuizzesTaken}
+                  </p>
                 </div>
               </div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-base sm:text-lg font-semibold">Top Performing Subject</h3>
+              <h3 className="text-base sm:text-lg font-semibold">
+                Top Performing Subject
+              </h3>
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-sm sm:text-base">{performanceMetrics.topSubject}</p>
+                  <p className="font-medium text-sm sm:text-base">
+                    {performanceMetrics.topSubject}
+                  </p>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    Average Score: {performanceMetrics.topSubjectScore.toFixed(1)}%
+                    Average Score:{" "}
+                    {performanceMetrics.topSubjectScore.toFixed(1)}%
                   </p>
                 </div>
                 <Badge variant="secondary">Top Subject</Badge>
               </div>
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-2">Recent Performance</h3>
+              <h3 className="text-base sm:text-lg font-semibold mb-2">
+                Recent Performance
+              </h3>
               <div className="h-[200px] sm:h-[250px]">
                 <LineChart quizScores={quizScores} />
               </div>
             </div>
             <div className="pt-4 border-t">
-              <p className="text-xs sm:text-sm text-muted-foreground">Improvement Rate</p>
-              <p className="text-xl sm:text-2xl font-bold text-green-600">+{performanceMetrics.improvementRate}%</p>
-              <p className="text-xs sm:text-sm text-muted-foreground">Compared to last month</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Improvement Rate
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-green-600">
+                +{performanceMetrics.improvementRate}%
+              </p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Compared to last month
+              </p>
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
-
+export default Page;

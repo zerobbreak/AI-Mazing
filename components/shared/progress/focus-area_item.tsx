@@ -1,4 +1,4 @@
-import type { FocusArea } from "@/type"
+import type { FocusArea } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { BookOpen, ChevronDown, ChevronUp, Target, Zap } from "lucide-react"

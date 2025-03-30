@@ -12,7 +12,7 @@ import {
   Legend,
   type ChartOptions,
 } from "chart.js"
-import type { Progress } from "@/type"
+import type { Progress } from "@/types"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 

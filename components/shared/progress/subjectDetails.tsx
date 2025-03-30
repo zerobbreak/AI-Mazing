@@ -1,4 +1,4 @@
-import type { Progress } from "@/type";
+import type { Progress } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Progress as ProgressBar } from "@/components/ui/progress";
 

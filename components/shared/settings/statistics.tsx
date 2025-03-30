@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { UserStatistics } from "@/type"
+import { UserStatistics } from "@/types"
 import { BookOpen, Clock, Target, Flame } from "lucide-react"
 
 interface StatisticsCardProps {

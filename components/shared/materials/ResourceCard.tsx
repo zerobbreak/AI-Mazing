@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Clock, BookOpen, Video, Dumbbell } from "lucide-react"
-import { Resource } from "@/type"
+import { Resource } from "@/types"
 
 interface ResourceCardProps {
   resource: Resource

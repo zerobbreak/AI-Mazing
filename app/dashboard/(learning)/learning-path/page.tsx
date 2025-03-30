@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import type { Course, EducationLevel, LearningPath,  } from "@/type"
+import type { Course, EducationLevel, LearningPath,  } from "@/types"
 import { CourseCard } from "@/components/shared/CourseCard"
 import { ChevronRight, BookOpen, Code, FlaskRoundIcon as Flask, Calculator } from "lucide-react"
 

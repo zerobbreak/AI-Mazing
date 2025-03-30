@@ -5,7 +5,7 @@ import { MetricsDisplay } from "@/components/shared/progress/metrics-display"
 import { ProgressOverview } from "@/components/shared/progress/progress-overview"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { FocusArea, ProgressData } from "@/type"
+import type { FocusArea, ProgressData } from "@/types"
 import { SubjectDetails } from "@/components/shared/progress/subjectDetails"
 import { FocusAreas } from "@/components/shared/progress/focus-area"
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { QuizCard } from "@/components/shared/QuizCard";
-import type { QuizSummary } from "@/type";
+import type { QuizSummary } from "@/types";
 import { Input } from "@/components/ui/input";
 import {
   Select,

@@ -5,13 +5,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getInitials(fullName: string | null | undefined): string {
-  if (!fullName || typeof fullName !== "string") {
-    return "";
-  }
+export const getInitials = (name: string): string =>
+  name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
-  return fullName
-    .split(" ") // Split the name into an array of words
-    .map((name) => name.charAt(0).toUpperCase()) // Take the first character of each word and make it uppercase
-    .join(""); // Join the initials together
+export function EducationStatus(grade?: number, course?: string) {
+  if (grade && grade >= 8 && grade <= 12) {
+    return `High School - Grade ${grade}`;
+  } else {
+    return `University - Studying ${course || "Unknown Course"}`;
+  }
 }

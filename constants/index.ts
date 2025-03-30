@@ -1,4 +1,4 @@
-import { Lesson, PerformanceMetrics, QuizScore, SubjectProgress } from "@/type";
+import { Lesson, PerformanceMetrics, QuizScore, SubjectProgress } from "@/types";
 
 export type Subject = "Mathematics" | "Science" | "English" | "History";
 
@@ -72,3 +72,17 @@ export const quizScores: QuizScore[] = [
   { subject: "History", quizNumber: 4, score: 77 },
   { subject: "History", quizNumber: 5, score: 82 },
 ];
+
+export const FIELD_NAMES = {
+  fullName: "Full Name",
+  email: "Email",
+  password: "Password",
+  role: "Role",
+}
+
+export const FIELD_TYPES = {
+  name: "text",
+  email: "email",
+  password: "password",
+  role: "select",
+}

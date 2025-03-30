@@ -11,7 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
-import { QuizScore } from "@/type"
+import { QuizScore } from "@/types"
 import { Subject } from "@/constants"
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)

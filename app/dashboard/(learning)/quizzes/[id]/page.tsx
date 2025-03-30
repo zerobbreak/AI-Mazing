@@ -1,7 +1,7 @@
 "use client"
 
 import { QuizComponent } from "@/components/shared/quiz"
-import { Quiz, QuizResult, UserPerformance } from "@/type"
+import { Quiz, QuizResult, UserPerformance } from "@/types"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 

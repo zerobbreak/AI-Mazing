@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { PastPaper, Quiz, QuizResult } from "@/type"
+import { PastPaper, Quiz, QuizResult } from "@/types"
 import { QuizComponent } from "@/components/shared/quiz"
 import { PastPaperComponent } from "@/components/shared/past-paper"
 

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { LearningPreferences } from "@/type"
+import { LearningPreferences } from "@/types"
 
 interface PreferencesFormProps {
   initialData: LearningPreferences

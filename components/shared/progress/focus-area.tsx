@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { FocusArea } from "@/type"
+import type { FocusArea } from "@/types"
 import { Button } from "@/components/ui/button"
 import { FocusAreaItem } from "./focus-area_item"
 

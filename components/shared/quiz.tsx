@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { QuizQuestion } from "./quiz-question"
-import { type Quiz, type QuizResult, type UserPerformance, type DifficultyLevel, QuizDifficulty } from "@/type";
+import { type Quiz, type QuizResult, type UserPerformance, type DifficultyLevel, QuizDifficulty } from "@/types";
 import { QuizResults } from "./QuizResults"
 import { Timer } from "./timer"
 

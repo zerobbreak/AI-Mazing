@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { QuizResult } from "@/type"
+import type { QuizResult } from "@/types"
 
 interface QuizResultsProps {
   result: QuizResult

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { LearningPreferences, NotificationSettings, UserProfile, UserStatistics } from "@/type"
+import { LearningPreferences, NotificationSettings, UserProfile, UserStatistics } from "@/types"
 import { ProfileForm } from "@/components/shared/settings/profile-form"
 import { StatisticsCard } from "@/components/shared/settings/statistics"
 import { PreferencesForm } from "@/components/shared/settings/preferences"

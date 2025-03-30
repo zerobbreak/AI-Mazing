@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { Resource, Subject } from "@/type"
+import type { Resource, Subject } from "@/types"
 import { Badge } from "@/components/ui/badge"
 
 interface ResourceListProps {

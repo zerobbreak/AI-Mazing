@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Clock, HelpCircle, Star } from "lucide-react"
 import Link from "next/link"
-import type { QuizSummary } from "@/type"
+import type { QuizSummary } from "@/types"
 
 interface QuizCardProps {
   quiz: QuizSummary

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Step1Schema, Step2Schema, Step3Schema } from "@/lib/validations/form";
+import { Step1Schema, Step2Schema, Step3Schema } from "@/lib/validations/validations";
 import {
   Form,
   FormField,

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { PastPaper } from "@/type"
+import { PastPaper } from "@/types"
 
 interface PastPaperComponentProps {
   paper: PastPaper
