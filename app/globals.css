@@ -78,6 +78,62 @@ body {
   }
 }
 
+.input-style {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  width: 100%;
+}
+
+.input-style:focus {
+  border-color: #5e9ed6;
+  outline: none;
+}
+
+.select-style {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.form-input {
+  @apply w-full min-h-14 border-none text-base font-bold placeholder:font-normal text-white placeholder:text-slate-300 focus-visible:ring-0 focus-visible:shadow-none bg-slate-900 !important;
+}
+
+.auth-container {
+  @apply relative flex flex-col-reverse text-gray-300 sm:flex-row;
+}
+
+.auth-form {
+  @apply my-auto flex h-full min-h-screen flex-1 items-center bg-slate-900 px-5 py-10;
+}
+
+.auth-box {
+  @apply bg-gradient-to-tr mx-auto flex max-w-xl flex-col gap-6 rounded-lg p-10;
+}
+
+.auth-illustration {
+  @apply sticky h-40 w-full sm:top-0 sm:h-screen sm:flex-1;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -86,3 +142,13 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes slideInfinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%); /* Slide all the way through */
+  }
+}
+

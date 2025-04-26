@@ -1,200 +1,226 @@
-"use client";
+"use server";
 
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import {
-  AcademicCapIcon,
-  PresentationChartLineIcon,
-  BookmarkIcon,
-  ChatBubbleLeftRightIcon,
-} from "@heroicons/react/24/outline";
-import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ContentLayout } from "@/components/admin-panel/content-layout";
-import { fetchUserByEmail, fetchUserById } from "@/lib/actions/user.action";
-import { useUserContext } from "@/context/UserContext";
+import { Button } from "@/components/ui/button";
+import { LineChart } from "@/components/shared/line-chart";
+import {
+  lessons,
+  performanceMetrics,
+  quizScores,
+  subjectProgress,
+} from "@/constants";
+import { Award, BookOpen, TrendingUp } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
+import { fetchUser } from "@/lib/actions/user.action";
+import { redirect } from "next/navigation";
+import { EducationStatus } from "@/lib/utils";
 
-// User data type declaration
-interface UserDataProps {
-  name: string;
-  learningPath: string;
-  progress: number;
-  recommendations: string[];
-  completedLessons: number;
-  hoursSpent: number;
-  performanceTrend: string;
-}
+const Page = async () => {
+  const user = await currentUser();
+  if (!user) return null;
 
-export default function Dashboard() {
-  const [user, setUser] = useState<UserDataProps | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const dummyUserData = {
-    name: "John Doe",
-    learningPath: "Maths",
-    progress: 68, // Progress percentage
-    recommendations: [
-      "Algebra ",
-      "Statistics",
-      "Geometry",
-    ],
-    completedLessons: 15,
-    hoursSpent: 32,
-    performanceTrend: "Improving",
-  };
+  const userInfo = await fetchUser(user.id);
+  if(!userInfo?.onboarded) redirect("/onboarding");
   
-  useEffect(() => {
-    // Simulate fetching user data and set the dummy data
-    setUser(dummyUserData);
-  }, []);
-
-  if (error) return <div>Error: {error}</div>;
-  console.log(user);
-
   return (
-    <ContentLayout title="Overview">
-      <div className="container mx-auto p-6 space-y-10">
-        {/* Welcome Banner */}
-        <section className="bg-blue-50 p-8 rounded-lg text-center shadow-md">
-          <h2 className="text-3xl font-bold text-blue-600">
-            Welcome back, {user?.name}!
-          </h2>
-          <p className="text-gray-700 mt-2">
-            You’re currently {user?.progress}% through the{" "}
-            <strong>{user?.learningPath}</strong> path.
-          </p>
-          <Progress value={user?.progress} className="mt-4" />
-        </section>
-
-        {/* Message to Complete Setup */}
-        {(!user?.name || !user?.learningPath) && (
-          <div className="bg-yellow-100 p-4 rounded-lg text-center">
-            <p className="text-lg font-semibold text-yellow-800">
-              Finish up setup: Please complete your profile setup.
-            </p>
-            <Link href={`/dashboard/profile`} passHref>
-              <Button className="mt-2 bg-yellow-600 text-white hover:bg-yellow-700">
-                Complete Setup
-              </Button>
-            </Link>
-          </div>
-        )}
-
-        {/* Core Dashboard Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Learning Paths Section */}
-          <Card className="shadow-md rounded-lg hover:shadow-lg transition duration-200 ease-in-out">
-            <CardHeader className="flex items-center space-x-4">
-              <AcademicCapIcon className="w-6 h-6 text-blue-500" />
-              <div>
-                <CardTitle>Core Subject</CardTitle>
-                <CardDescription>
-                  Your current journey and next steps
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Continue with <strong>{user?.learningPath}</strong>.
-              </p>
-              <Link href="/dashboard/learning-path" passHref>
-                <Button className="mt-4 bg-blue-600 text-white hover:bg-blue-700">
-                  Continue Learning
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Performance Analytics Section */}
-          <Card className="shadow-md rounded-lg hover:shadow-lg transition duration-200 ease-in-out">
-            <CardHeader className="flex items-center space-x-4">
-              <PresentationChartLineIcon className="w-6 h-6 text-green-500" />
-              <div>
-                <CardTitle>Performance Analytics</CardTitle>
-                <CardDescription>
-                  Track your progress and trends
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p>
-                <strong>Completed Lessons:</strong> {user?.completedLessons}
-              </p>
-              <p>
-                <strong>Total Hours:</strong> {user?.hoursSpent} hrs
-              </p>
-              <p>
-                <strong>Trend:</strong>{" "}
-                <Badge
-                  variant="outline"
-                  color={
-                    user?.performanceTrend === "Improving" ? "green" : "yellow"
-                  }
-                >
-                  {user?.performanceTrend}
-                </Badge>
-              </p>
-              <Link href="/dashboard/analytics" passHref>
-                <Button className="mt-4 bg-green-600 text-white hover:bg-green-700">
-                  View Details
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Recommendations Section */}
-          <Card className="shadow-md rounded-lg hover:shadow-lg transition duration-200 ease-in-out">
-            <CardHeader className="flex items-center space-x-4">
-              <BookmarkIcon className="w-6 h-6 text-purple-500" />
-              <div>
-                <CardTitle>Recommendations</CardTitle>
-                <CardDescription>
-                  Based on the weaknesses of the students
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {user?.recommendations.map((rec, index) => (
-                <div key={index} className="py-1">
-                  <Link href={`/recommendations/${rec}`} passHref>
-                    <Button
-                      variant="link"
-                      className="text-blue-600 hover:text-blue-700"
-                    >
-                      {rec}
-                    </Button>
-                  </Link>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Community and Feedback Section */}
-        <section className="bg-gray-100 p-6 rounded-lg text-center shadow-md">
-          <h3 className="text-2xl font-semibold text-gray-800">
-            Community & Feedback
-          </h3>
-          <p className="text-gray-600 mt-2">
-            Connect with peers and share your experiences, or provide feedback
-            on the platform.
-          </p>
-          <Link href="/dashboard/community" passHref>
-            <Button className="mt-4 bg-blue-600 text-white hover:bg-blue-700">
-              Join the Community
-            </Button>
-          </Link>
-        </section>
+    <div className="container mx-auto p-4 sm:p-6 space-y-6">
+      {/* Header */}
+      <div className="space-y-1">
+        <h1 className="text-xl sm:text-2xl font-bold">
+          Welcome back, Student!
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">{EducationStatus(userInfo.grade)}</p>
       </div>
-    </ContentLayout>
+
+      <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
+        {/* Overall Progress */}
+        <Card className="sm:col-span-2 md:col-span-1">
+          <CardHeader>
+            <CardTitle className="text-lg sm:text-xl">
+              Overall Learning Progress
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Total Progress</span>
+                <span>0%</span>
+              </div>
+              <Progress value={0} />
+            </div>
+            <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
+              <div>
+                <span>{userInfo.subjects.length}</span>
+                <p>Subjects Completed</p>
+              </div>
+              <div className="text-right">
+                <span>87</span>
+                <p>Hours Studied</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Subject Progress */}
+        <Card className="sm:col-span-2 md:col-span-1">
+          <CardHeader>
+            <CardTitle className="text-lg sm:text-xl">
+              Subject Progress
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {subjectProgress.map((subject) => (
+              <div key={subject.subject} className="space-y-2">
+                <div className="flex justify-between text-xs sm:text-sm">
+                  <span>{subject.subject}</span>
+                  <span>{subject.progress}%</span>
+                </div>
+                <Progress value={subject.progress} />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Recommended Lessons */}
+        <Card className="sm:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-lg sm:text-xl">
+              Recommended Lessons
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {lessons.map((lesson) => (
+              <div
+                key={lesson.title}
+                className="flex flex-col space-y-4 p-3 sm:p-4 border rounded-lg"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-2 sm:space-y-0">
+                  <div className="space-y-1">
+                    <p className="font-medium text-sm sm:text-base">
+                      {lesson.title}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="secondary">{lesson.subject}</Badge>
+                      <Badge variant="outline">{lesson.level}</Badge>
+                      <Badge variant="outline">{lesson.duration}</Badge>
+                    </div>
+                  </div>
+                  <Button className="self-start sm:self-center">Start</Button>
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {lesson.description}
+                </p>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium">Prerequisites:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {lesson.prerequisites.map((prereq) => (
+                      <Badge
+                        key={prereq}
+                        variant="secondary"
+                        className="text-xs"
+                      >
+                        {prereq}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Performance Metrics */}
+        <Card className="sm:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-lg sm:text-xl">
+              Performance Metrics
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="flex items-center space-x-4">
+                <div className="p-2 bg-blue-100 rounded-full">
+                  <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Average Score
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold">
+                    {performanceMetrics.averageScore.toFixed(1)}%
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="p-2 bg-green-100 rounded-full">
+                  <Award className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Current Streak
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold">
+                    {performanceMetrics.currentStreak} days
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="p-2 bg-purple-100 rounded-full">
+                  <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Total Quizzes Taken
+                  </p>
+                  <p className="text-lg sm:text-2xl font-bold">
+                    {performanceMetrics.totalQuizzesTaken}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-base sm:text-lg font-semibold">
+                Top Performing Subject
+              </h3>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-medium text-sm sm:text-base">
+                    {performanceMetrics.topSubject}
+                  </p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Average Score:{" "}
+                    {performanceMetrics.topSubjectScore.toFixed(1)}%
+                  </p>
+                </div>
+                <Badge variant="secondary">Top Subject</Badge>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold mb-2">
+                Recent Performance
+              </h3>
+              <div className="h-[200px] sm:h-[250px]">
+                <LineChart quizScores={quizScores} />
+              </div>
+            </div>
+            <div className="pt-4 border-t">
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Improvement Rate
+              </p>
+              <p className="text-xl sm:text-2xl font-bold text-green-600">
+                +{performanceMetrics.improvementRate}%
+              </p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Compared to last month
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
-}
+};
+
+export default Page;

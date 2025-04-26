@@ -1,12 +1,14 @@
-import Link from "next/link";
+"use client"
+
+import { useState, useEffect } from "react"
+import Link from "next/link"
 import {
   ChatBubbleLeftEllipsisIcon,
   PresentationChartLineIcon,
   AcademicCapIcon,
-  HomeIcon,
-  InformationCircleIcon, 
-  PhoneIcon
-} from "@heroicons/react/24/outline";
+  SunIcon,
+  MoonIcon,
+} from "@heroicons/react/24/outline"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,18 +16,35 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
+import { Button } from "@/components/ui/button"
 
 export default function NavMenu() {
+  const [theme, setTheme] = useState("light")
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light"
+    setTheme(savedTheme)
+    document.documentElement.classList.toggle("dark", savedTheme === "dark")
+  }, [])
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light"
+    setTheme(newTheme)
+    localStorage.setItem("theme", newTheme)
+    document.documentElement.classList.toggle("dark")
+  }
+
   return (
-    <header className="border-b border-gray-200">
+    <header className="bg-background text-foreground">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           {/* Logo and Title */}
           <div className="flex items-center space-x-3">
-            <HomeIcon className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-bold text-foreground">AI-Mazing Learning</span>
+            <Link href="/" className="text-2xl font-bold text-foreground">
+              AI-Mazing
+            </Link>
           </div>
 
           {/* Navigation Menu */}
@@ -33,37 +52,38 @@ export default function NavMenu() {
             <NavigationMenuList className="hidden md:flex space-x-4">
               {/* Home Link */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Home</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 w-[200px]">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/"
-                          className="flex items-center space-x-2 text-sm font-medium"
-                        >
-                          <HomeIcon className="w-4 h-4" />
-                          <span>Go to Home</span>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
+                <Link href="/" passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
+                </Link>
               </NavigationMenuItem>
 
               {/* Features Dropdown */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Features</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 w-[300px]">
+                  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                    <li className="row-span-3">
+                      <NavigationMenuLink asChild>
+                        <div className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md">
+                          <AcademicCapIcon className="h-6 w-6" />
+                          <div className="mb-2 mt-4 text-lg font-medium">Learning Platform</div>
+                          <p className="text-sm leading-tight text-muted-foreground">
+                            Unlock your potential with personalized, AI-driven learning paths and interactive content.
+                          </p>
+                        </div>
+                      </NavigationMenuLink>
+                    </li>
                     <li>
                       <NavigationMenuLink asChild>
                         <Link
                           href="/features/adaptive-learning"
-                          className="flex items-center space-x-2 text-sm font-medium"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <AcademicCapIcon className="w-4 h-4" />
-                          <span>Adaptive Learning</span>
+                          <div className="text-sm font-medium leading-none">Adaptive Learning</div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Adapted learning style that caters to your needs
+                          </p>
                         </Link>
                       </NavigationMenuLink>
                     </li>
@@ -71,10 +91,13 @@ export default function NavMenu() {
                       <NavigationMenuLink asChild>
                         <Link
                           href="/features/predictive-analytics"
-                          className="flex items-center space-x-2 text-sm font-medium"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <PresentationChartLineIcon className="w-4 h-4" />
-                          <span>Predictive Analytics</span>
+                          <div className="text-sm font-medium leading-none">Predictive Analytics</div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Insights that identify and address learning gaps
+                          </p>
                         </Link>
                       </NavigationMenuLink>
                     </li>
@@ -82,10 +105,13 @@ export default function NavMenu() {
                       <NavigationMenuLink asChild>
                         <Link
                           href="/features/chatbot"
-                          className="flex items-center space-x-2 text-sm font-medium"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <ChatBubbleLeftEllipsisIcon className="w-4 h-4" />
-                          <span>Chatbots & Tutors</span>
+                          <div className="text-sm font-medium leading-none">Chatbots & Tutors</div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Get answers and support anytime, anywhere
+                          </p>
                         </Link>
                       </NavigationMenuLink>
                     </li>
@@ -93,54 +119,42 @@ export default function NavMenu() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* About Us Link */}
+              {/* Pricing Link */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger>About Us</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 w-[200px]">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/about"
-                          className="flex items-center space-x-2 text-sm font-medium"
-                        >
-                          <InformationCircleIcon className="w-4 h-4" />
-                          <span>Learn more about us</span>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
+                <Link href="/pricing" passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>Pricing</NavigationMenuLink>
+                </Link>
               </NavigationMenuItem>
 
-              {/* Contact Link */}
+              {/* Testimonials Link */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Contact</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 w-[200px]">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/contact"
-                          className="flex items-center space-x-2 text-sm font-medium"
-                        >
-                          <PhoneIcon className="w-4 h-4" />
-                          <span>Get in touch</span>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
+                <Link href="/testimonials" passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>Testimonials</NavigationMenuLink>
+                </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Sign In Button */}
-          <Button asChild>
-            <Link href="/auth/login">Login</Link>
-          </Button>
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="icon" onClick={toggleTheme}>
+              {theme === "light" ? (
+                <MoonIcon className="h-[1.2rem] w-[1.2rem]" />
+              ) : (
+                <SunIcon className="h-[1.2rem] w-[1.2rem]" />
+              )}
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/sign-in">Login</Link>
+            </Button>
+            <Button variant="default" asChild>
+              <Link href="/sign-up">Sign Up</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
   )
 }
+
