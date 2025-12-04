@@ -1,20 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { signIn } from "@/auth";
+import { NextResponse } from "next/server";
+import { AuthError } from "next-auth";
 
-export default async function handler(
-    req: NextApiRequest, 
-    res: NextApiResponse
-){
+export async function POST(req: Request) {
     try {
-        const {email, password} = req.body;
-        await signIn('credentials', {email, password});
+        const { email, password } = await req.json();
+        await signIn('credentials', { email, password, redirect: false });
 
-        res.status(200).json({success: true});
-    } catch (error: any) {
-        if(error.type === 'CredentialsSignIn'){
-            res.status(401).json({ error: 'Invalid email or password'});
-        }else{
-            res.status(500).json({error: "Something went wrong"});
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        if (error instanceof AuthError) {
+            if (error.type === 'CredentialsSignin') {
+                return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+            }
         }
+        return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

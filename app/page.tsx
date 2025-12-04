@@ -1,151 +1,95 @@
-// app/page.js
-import {
-  BookOpenIcon,
-  ChatBubbleLeftEllipsisIcon,
-  PresentationChartLineIcon,
-  AcademicCapIcon,
-  HomeIcon,
-} from "@heroicons/react/24/outline";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
+import NavMenu from "@/components/shared/NavMenu";
+import HeroSection from "@/components/home/HeroSection";
+import BentoGrid from "@/components/home/BentoGrid";
+import Stats from "@/components/home/Stats";
+import HowItWorks from "@/components/home/HowItWorks";
+import Testimonials from "@/components/home/Testimonials";
+import FAQ from "@/components/home/FAQ";
+import { RocketLaunchIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import NavMenu from "@/components/shared/NavMenu";
 
 export default function HomePage() {
   return (
-    <div className="mx-auto p-6 space-y-12">
+    <div className="min-h-screen bg-gray-900 text-white selection:bg-blue-500/30">
       {/* Navbar */}
-      <NavMenu/>
+      <NavMenu />
 
       {/* Hero Section */}
-      <section className="text-center mt-8">
-        <h2 className="text-4xl font-bold text-gray-800">
-          Welcome to AI-Mazing Learning
-        </h2>
-        <p className="text-lg text-gray-600 mt-4">
-          Unlock your potential with personalized, AI-driven learning paths and
-          interactive content.
-        </p>
-        <Button className="mt-6 bg-blue-600 text-white hover:bg-blue-700">
-          Get Started
-        </Button>
-      </section>
+      <HeroSection />
 
-      {/* Core Features Section */}
-      <section className="space-y-8">
-        <h3 className="text-2xl font-semibold text-gray-800 text-center">
-          Our Core Features
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Feature Card */}
-          <Card className="bg-white shadow-lg rounded-lg">
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <AcademicCapIcon className="w-6 h-6 text-blue-600" />
-                <CardTitle>Adaptive Learning Paths</CardTitle>
-              </div>
-              <CardDescription>
-                Personalized content that evolves with you.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Our AI tailors lessons to fit each student’s learning style,
-                ensuring a unique path to success.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Link
-                href="/features/adaptive-learning"
-                className="text-blue-600"
-              >
-                Learn More
-              </Link>
-            </CardFooter>
-          </Card>
+      {/* Stats Section */}
+      <Stats />
 
-          {/* Predictive Analytics Card */}
-          <Card className="bg-white shadow-lg rounded-lg">
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <PresentationChartLineIcon className="w-6 h-6 text-green-600" />
-                <CardTitle>Predictive Analytics</CardTitle>
-              </div>
-              <CardDescription>
-                Insights that identify and address learning gaps.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Analyze performance trends and forecast areas needing
-                improvement to keep you on track.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Link
-                href="/features/predictive-analytics"
-                className="text-green-600"
-              >
-                Learn More
-              </Link>
-            </CardFooter>
-          </Card>
+      {/* Bento Grid Features */}
+      <BentoGrid />
 
-          {/* Chatbots and Virtual Tutors Card */}
-          <Card className="bg-white shadow-lg rounded-lg">
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <ChatBubbleLeftEllipsisIcon className="w-6 h-6 text-purple-600" />
-                <CardTitle>Chatbots & Virtual Tutors</CardTitle>
-              </div>
-              <CardDescription>
-                Get answers and support anytime, anywhere.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Our intelligent chatbots and virtual tutors provide real-time
-                assistance for all your questions.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Link href="/features/chatbot" className="text-purple-600">
-                Learn More
-              </Link>
-            </CardFooter>
-          </Card>
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* FAQ */}
+      <FAQ />
+
+      {/* CTA Section */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-blue-600/10"></div>
+        <div className="container mx-auto px-4 relative z-10">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 text-center text-white shadow-2xl shadow-blue-900/50">
+                <div className="max-w-2xl mx-auto space-y-8">
+                    <h2 className="text-3xl lg:text-5xl font-bold tracking-tight">Ready to Unlock Your Potential?</h2>
+                    <p className="text-blue-100 text-lg">
+                        Join thousands of learners who are transforming their careers with AI-Mazing Learning.
+                    </p>
+                    <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50 text-lg px-8 py-6 font-bold rounded-full shadow-lg transition-transform hover:scale-105">
+                        <Link href="/auth/sign-up">Get Started for Free</Link>
+                    </Button>
+                </div>
+            </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="text-center bg-gray-100 p-8 rounded-lg">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          Ready to start learning?
-        </h2>
-        <p className="text-gray-600 mt-2">
-          Join AI-Mazing Learning today and unlock endless possibilities.
-        </p>
-        <Button className="mt-4 bg-blue-600 text-white hover:bg-blue-700">
-          Sign Up Now
-        </Button>
-      </section>
+      {/* Footer */}
+      <footer className="bg-gray-950 text-gray-400 py-12 border-t border-gray-800">
+        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="space-y-4">
+                <h3 className="text-white text-lg font-bold flex items-center gap-2">
+                    <RocketLaunchIcon className="w-5 h-5 text-blue-500" /> AI-Mazing
+                </h3>
+                <p className="text-sm">
+                    Empowering the next generation of learners with artificial intelligence.
+                </p>
+            </div>
+            <div>
+                <h4 className="text-white font-semibold mb-4">Product</h4>
+                <ul className="space-y-2 text-sm">
+                    <li><Link href="#" className="hover:text-blue-400 transition">Features</Link></li>
+                    <li><Link href="#" className="hover:text-blue-400 transition">Pricing</Link></li>
+                    <li><Link href="#" className="hover:text-blue-400 transition">Enterprise</Link></li>
+                </ul>
+            </div>
+            <div>
+                <h4 className="text-white font-semibold mb-4">Resources</h4>
+                <ul className="space-y-2 text-sm">
+                    <li><Link href="#" className="hover:text-blue-400 transition">Blog</Link></li>
+                    <li><Link href="#" className="hover:text-blue-400 transition">Community</Link></li>
+                    <li><Link href="#" className="hover:text-blue-400 transition">Help Center</Link></li>
+                </ul>
+            </div>
+            <div>
+                <h4 className="text-white font-semibold mb-4">Legal</h4>
+                <ul className="space-y-2 text-sm">
+                    <li><Link href="#" className="hover:text-blue-400 transition">Privacy Policy</Link></li>
+                    <li><Link href="#" className="hover:text-blue-400 transition">Terms of Service</Link></li>
+                </ul>
+            </div>
+        </div>
+        <div className="container mx-auto px-4 mt-12 pt-8 border-t border-gray-800 text-center text-sm text-gray-600">
+            © {new Date().getFullYear()} AI-Mazing Learning. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }

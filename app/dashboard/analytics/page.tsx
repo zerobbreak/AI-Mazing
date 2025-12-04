@@ -5,116 +5,164 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
-
-// Dummy data
-const dummyStats = [
-  { label: "Hours Spent", value: "75 hrs" },
-  { label: "Lessons Completed", value: "25" },
-  { label: "Quizzes Passed", value: "18" },
-  { label: "Improvement Rate", value: "14%" },
-];
-
-const peerComparison = [
-  { label: "Average Completion Time", user: "75 hrs", peers: "80 hrs" },
-  { label: "Lessons Completed", user: "25", peers: "20" },
-  { label: "Quizzes Passed", user: "18", peers: "15" },
-];
-
-const recentActivity = [
-  { activity: "Completed 'Advanced React'", date: "2024-10-01" },
-  { activity: "Passed 'Data Structures Quiz'", date: "2024-09-28" },
-  { activity: "Watched 'Machine Learning Basics'", date: "2024-09-25" },
-];
+import { useUserContext } from "@/context/UserContext";
+import { fetchUserById } from "@/lib/actions/user.action";
 
 export default function Analytics() {
-  const [progress, setProgress] = useState<number>(82); // Dummy progress percentage
+  const { user } = useUserContext();
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (user?.id) {
+        const fetchedUser = await fetchUserById(Number(user.id));
+        setUserData(fetchedUser);
+      }
+      setLoading(false);
+    };
+    loadData();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <ContentLayout title="Analytics">
+        <div className="p-6">Loading analytics...</div>
+      </ContentLayout>
+    );
+  }
+
+  const stats = [
+    { label: "Hours Spent", value: `${userData?.hoursSpent || 0} hrs` },
+    { label: "Lessons Completed", value: `${userData?.completedLessons || 0}` },
+    { label: "Quizzes Passed", value: "N/A" }, // Not in DB yet
+    { label: "Performance Trend", value: userData?.performanceTrend || "Stable" },
+  ];
+
+  const progress = userData?.progress || 0;
 
   return (
     <ContentLayout title="Analytics">
-      <div className="container mx-auto p-6 space-y-8">
+      <div className="container mx-auto p-6 space-y-8 text-white">
 
         {/* Progress Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
+          <Card className="bg-gray-900 border-gray-800 hover:border-blue-500/50 transition-all duration-300">
             <CardHeader>
-              <PresentationChartLineIcon className="w-6 h-6 text-blue-500" />
-              <CardTitle>Progress Overview</CardTitle>
-              <CardDescription>Your learning progress at a glance</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <PresentationChartLineIcon className="w-6 h-6 text-blue-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-white">Progress Overview</CardTitle>
+                  <CardDescription className="text-gray-400">Your learning progress at a glance</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">Current Progress: <span className="font-semibold">{progress}%</span></p>
-              <Progress value={progress} className="mt-2" />
+              <div className="flex justify-between items-end mb-2">
+                <span className="text-gray-400">Current Progress</span>
+                <span className="text-3xl font-bold text-blue-400">{progress}%</span>
+              </div>
+              <Progress value={progress} className="h-3 bg-gray-800 [&>div]:bg-blue-500" />
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-gray-900 border-gray-800 hover:border-purple-500/50 transition-all duration-300">
             <CardHeader>
-              <CardTitle>Performance Stats</CardTitle>
-              <CardDescription>Track your learning performance</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-500/20 rounded-lg">
+                  <ChartPieIcon className="w-6 h-6 text-purple-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-white">Performance Stats</CardTitle>
+                  <CardDescription className="text-gray-400">Track your learning performance</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              {dummyStats.map((stat, index) => (
-                <div key={index} className="flex justify-between py-1">
-                  <span>{stat.label}</span>
-                  <Badge variant="outline">{stat.value}</Badge>
-                </div>
-              ))}
+              <div className="space-y-4">
+                {stats.map((stat, index) => (
+                  <div key={index} className="flex justify-between items-center py-1 border-b border-gray-800 last:border-0">
+                    <span className="text-gray-300">{stat.label}</span>
+                    <Badge variant="outline" className="border-gray-700 text-gray-300 bg-gray-800">{stat.value}</Badge>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Peer Comparison and Trends */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
+          <Card className="bg-gray-900 border-gray-800 hover:border-pink-500/50 transition-all duration-300">
             <CardHeader>
-              <ChartPieIcon className="w-6 h-6 text-purple-500" />
-              <CardTitle>Peer Comparison</CardTitle>
-              <CardDescription>See how you compare with others</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {peerComparison.map((comp, index) => (
-                <div key={index} className="flex justify-between py-1">
-                  <span>{comp.label}</span>
-                  <div className="flex space-x-4">
-                    <span className="text-blue-600">{comp.user}</span>
-                    <span className="text-gray-600">|</span>
-                    <span className="text-gray-500">{comp.peers}</span>
-                  </div>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-pink-500/20 rounded-lg">
+                  <ChartPieIcon className="w-6 h-6 text-pink-400" />
                 </div>
-              ))}
+                <div>
+                  <CardTitle className="text-white">Peer Comparison</CardTitle>
+                  <CardDescription className="text-gray-400">See how you compare with others</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <div className="flex justify-between mb-2 text-sm">
+                  <span className="text-gray-400">Average Completion Time</span>
+                  <span className="text-gray-500">Target: 80 hrs</span>
+                </div>
+                <div className="flex items-center gap-4">
+                   <div className="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                     <div className="h-full bg-pink-500" style={{ width: `${Math.min((userData?.hoursSpent || 0) / 80 * 100, 100)}%` }}></div>
+                   </div>
+                   <span className="text-pink-400 font-bold">{userData?.hoursSpent || 0} hrs</span>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2 text-sm">
+                  <span className="text-gray-400">Lessons Completed</span>
+                  <span className="text-gray-500">Target: 20</span>
+                </div>
+                <div className="flex items-center gap-4">
+                   <div className="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                     <div className="h-full bg-pink-500" style={{ width: `${Math.min((userData?.completedLessons || 0) / 20 * 100, 100)}%` }}></div>
+                   </div>
+                   <span className="text-pink-400 font-bold">{userData?.completedLessons || 0}</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-gray-900 border-gray-800 hover:border-green-500/50 transition-all duration-300">
             <CardHeader>
-              <ArrowTrendingUpIcon className="w-6 h-6 text-green-500" />
-              <CardTitle>Trends & Improvement</CardTitle>
-              <CardDescription>Analyze your progress over time</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-500/20 rounded-lg">
+                  <ArrowTrendingUpIcon className="w-6 h-6 text-green-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-white">Trends & Improvement</CardTitle>
+                  <CardDescription className="text-gray-400">Analyze your progress over time</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700">
-                You're showing a consistent improvement rate of <span className="font-semibold">14%</span> over the past month. Keep it up!
-              </p>
-              <Progress value={progress} className="mt-4" />
+              <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700 mb-6">
+                <p className="text-gray-300">
+                  Your performance trend is currently: <span className="font-bold text-green-400">{userData?.performanceTrend || "Stable"}</span>.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-gray-400">
+                  <span>Weekly Growth</span>
+                  <span>+12%</span>
+                </div>
+                <Progress value={progress} className="h-2 bg-gray-800 [&>div]:bg-green-500" />
+              </div>
             </CardContent>
           </Card>
         </div>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Your latest learning milestones</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {recentActivity.map((activity, index) => (
-              <div key={index} className="flex justify-between py-1">
-                <span>{activity.activity}</span>
-                <span className="text-gray-500 text-sm">{activity.date}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
       </div>
     </ContentLayout>
   );

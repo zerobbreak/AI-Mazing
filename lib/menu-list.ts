@@ -85,9 +85,14 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Settings",
       menus: [
         {
-          href: "/dashbaord/profile",
+          href: "/dashboard/profile",
           label: "Profile Settings",
           icon: Settings
+        },
+        {
+          href: "/dashboard/api-demo",
+          label: "API Architecture",
+          icon: LayoutGrid // Reusing an icon for demo
         }
       ]
     }

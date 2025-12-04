@@ -5,7 +5,7 @@ import { z } from "zod";
 import prisma from "./lib/prisma";
 import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
@@ -23,7 +23,7 @@ async function getUser(email: string): Promise<User | undefined> {
   }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   adapter: PrismaAdapter(prisma),
   ...authConfig,
   providers: [
@@ -39,7 +39,7 @@ export const { auth, signIn, signOut } = NextAuth({
           if (!user) return null;
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          if (passwordsMatch) return { ...user, id: user.id.toString() };
         }
 
         console.log("Invalid credentials");
